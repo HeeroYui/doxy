@@ -318,6 +318,7 @@ span.SRScope {
 
 .table > tbody > tr > td.memSeparator {
   line-height: 0;
+  padding: 0;
 }
 .memItemLeft, .memTemplItemLeft {
   white-space: normal;
