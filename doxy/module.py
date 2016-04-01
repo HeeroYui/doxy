@@ -39,6 +39,7 @@ class Module:
 		self.name=module_name
 		# Dependency list:
 		self.depends = []
+		self.define = []
 		self.version = [0,0]
 		self.full_name = "No Title"
 		self.website = ""
@@ -103,6 +104,8 @@ class Module:
 				data += 'INPUT += "' + str(elem) + '"\n'
 		else:
 			data += 'INPUT = "' + str(self.path) + '"\n'
+		for elem in self.define:
+			data += 'PREDEFINED += ' + str(elem) + '=1\n'
 		if len(self.sub_heritage_list.list_heritage) > 0:
 			data += 'TAGFILES ='
 			for element in self.sub_heritage_list.list_heritage:
@@ -144,6 +147,9 @@ class Module:
 	def add_module_depend(self, list):
 		tools.list_append_to(self.depends, list, True)
 	
+	def add_module_define(self, list):
+		tools.list_append_to(self.define, list, True)
+	
 	def print_list(self, description, input_list):
 		if type(input_list) == list:
 			if len(input_list) > 0:
@@ -165,6 +171,7 @@ class Module:
 		print('    website source:"' + str(self.website_source) + "'")
 		print('    path:"' + str(self.path) + "'")
 		self.print_list('depends',self.depends)
+		self.print_list('define',self.define)
 		
 		return True
 	
