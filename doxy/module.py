@@ -44,7 +44,8 @@ class Module:
 		self.full_name = "No Title"
 		self.website = ""
 		self.website_source = ""
-		self.path = tools.get_current_path(self.origin_file)
+		self.path = []
+		self.data_path = []
 		
 		# The module has been already build ...
 		self.isbuild = False
@@ -98,12 +99,26 @@ class Module:
 		data += 'PROJECT_NAME = "' + str(self.full_name) + '"\n'
 		data += 'OUTPUT_DIRECTORY = "' + str(os.path.join(target.get_final_path(), self.name)) + '"\n'
 		data += 'GENERATE_TAGFILE = "' + str(os.path.join(target.get_final_path(), self.name + ".tag")) + '"\n'
-		if type(self.path) == list:
+		for elem in self.data_path:
+			if len(elem) == 0:
+				continue
+			data += 'IMAGE_PATH += "'
+			if elem[0] == "/":
+				data += str(elem)
+			else:
+				data += os.path.join(tools.get_current_path(self.origin_file), elem)
+			data += '"\n'
+		if len(self.path) != 0:
 			data += 'INPUT = \n'
 			for elem in self.path:
-				data += 'INPUT += "' + str(elem) + '"\n'
-		else:
-			data += 'INPUT = "' + str(self.path) + '"\n'
+				if len(elem) == 0:
+					continue
+				data += 'INPUT += "'
+				if elem[0] == "/":
+					data += str(elem)
+				else:
+					data += os.path.join(tools.get_current_path(self.origin_file), elem)
+				data += '"\n'
 		for elem in self.define:
 			data += 'PREDEFINED += ' + str(elem) + '=1\n'
 		if len(self.sub_heritage_list.list_heritage) > 0:
@@ -112,8 +127,7 @@ class Module:
 				data += " \\\n"
 				data += '     ' + os.path.join(target.get_final_path(), element.name + ".tag")
 				data += '=' + os.path.join(target.get_final_path(), element.name, "html")
-				
-		
+		data += '\n\n\n'
 		tools.file_write_data(filename_dox, data)
 		multiprocess.run_command("doxygen " + filename_dox)
 		debug.debug("heritage: " + str(self.sub_heritage_list))
@@ -142,7 +156,16 @@ class Module:
 		self.website_source = val
 	
 	def set_path(self, val):
-		self.path = val
+		if type(val) == list:
+			tools.list_append_to(self.path, val, True)
+		else:
+			tools.list_append_to(self.path, [val], True)
+	
+	def add_path(self, list):
+		tools.list_append_to(self.path, list, True)
+	
+	def add_data_path(self, list):
+		tools.list_append_to(self.data_path, list, True)
 	
 	def add_module_depend(self, list):
 		tools.list_append_to(self.depends, list, True)
@@ -172,6 +195,7 @@ class Module:
 		print('    path:"' + str(self.path) + "'")
 		self.print_list('depends',self.depends)
 		self.print_list('define',self.define)
+		self.print_list('data_path',self.data_path)
 		
 		return True
 	
