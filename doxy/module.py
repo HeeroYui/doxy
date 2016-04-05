@@ -46,6 +46,7 @@ class Module:
 		self.website_source = ""
 		self.path = []
 		self.data_path = []
+		self.sample_path = []
 		
 		# The module has been already build ...
 		self.isbuild = False
@@ -108,6 +109,15 @@ class Module:
 			else:
 				data += os.path.join(tools.get_current_path(self.origin_file), elem)
 			data += '"\n'
+		for elem in self.sample_path:
+			if len(elem) == 0:
+				continue
+			data += 'EXAMPLE_PATH += "'
+			if elem[0] == "/":
+				data += str(elem)
+			else:
+				data += os.path.join(tools.get_current_path(self.origin_file), elem)
+			data += '"\n'
 		if len(self.path) != 0:
 			data += 'INPUT = \n'
 			for elem in self.path:
@@ -164,6 +174,9 @@ class Module:
 	def add_path(self, list):
 		tools.list_append_to(self.path, list, True)
 	
+	def add_sample_path(self, list):
+		tools.list_append_to(self.sample_path, list, True)
+	
 	def add_data_path(self, list):
 		tools.list_append_to(self.data_path, list, True)
 	
@@ -196,6 +209,7 @@ class Module:
 		self.print_list('depends',self.depends)
 		self.print_list('define',self.define)
 		self.print_list('data_path',self.data_path)
+		self.print_list('sample_path',self.sample_path)
 		
 		return True
 	
