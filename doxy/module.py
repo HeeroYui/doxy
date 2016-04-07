@@ -40,13 +40,16 @@ class Module:
 		# Dependency list:
 		self.depends = []
 		self.define = []
-		self.version = [0,0]
+		self.version = None
 		self.full_name = "No Title"
 		self.website = ""
 		self.website_source = ""
 		self.path = []
 		self.data_path = []
 		self.sample_path = []
+		self.exclude_symbole = []
+		self.file_patterns = []
+		self.exclude_file = []
 		
 		# The module has been already build ...
 		self.isbuild = False
@@ -98,6 +101,10 @@ class Module:
 		data += "# -- doxy auto-added section\n"
 		data += "# -----------------------------------\n"
 		data += 'PROJECT_NAME = "' + str(self.full_name) + '"\n'
+		
+		if self.version != None:
+			data += 'PROJECT_NUMBER = "' + tools.version_to_string(self.version) + '"\n'
+		
 		data += 'OUTPUT_DIRECTORY = "' + str(os.path.join(target.get_final_path(), self.name)) + '"\n'
 		data += 'GENERATE_TAGFILE = "' + str(os.path.join(target.get_final_path(), self.name + ".tag")) + '"\n'
 		for elem in self.data_path:
@@ -109,6 +116,7 @@ class Module:
 			else:
 				data += os.path.join(tools.get_current_path(self.origin_file), elem)
 			data += '"\n'
+		
 		for elem in self.sample_path:
 			if len(elem) == 0:
 				continue
@@ -118,25 +126,44 @@ class Module:
 			else:
 				data += os.path.join(tools.get_current_path(self.origin_file), elem)
 			data += '"\n'
-		if len(self.path) != 0:
-			data += 'INPUT = \n'
-			for elem in self.path:
-				if len(elem) == 0:
-					continue
-				data += 'INPUT += "'
-				if elem[0] == "/":
-					data += str(elem)
-				else:
-					data += os.path.join(tools.get_current_path(self.origin_file), elem)
-				data += '"\n'
+		
+		for elem in self.path:
+			if len(elem) == 0:
+				continue
+			data += 'INPUT += "'
+			if elem[0] == "/":
+				data += str(elem)
+			else:
+				data += os.path.join(tools.get_current_path(self.origin_file), elem)
+			data += '"\n'
+		
+		for elem in self.exclude_symbole:
+			if len(elem) == 0:
+				continue
+			data += 'EXCLUDE_SYMBOLS += "' + str(elem) + '"\n'
+		
+		for elem in self.file_patterns:
+			if len(elem) == 0:
+				continue
+			data += 'FILE_PATTERNS += ' + str(elem) + '\n'
+		
+		for elem in self.exclude_file:
+			if len(elem) == 0:
+				continue
+			data += 'EXCLUDE_PATTERNS += "' + str(elem) + '"\n'
+		
 		for elem in self.define:
+			if len(elem) == 0:
+				continue
 			data += 'PREDEFINED += ' + str(elem) + '=1\n'
-		if len(self.sub_heritage_list.list_heritage) > 0:
-			data += 'TAGFILES ='
-			for element in self.sub_heritage_list.list_heritage:
-				data += " \\\n"
-				data += '     ' + os.path.join(target.get_final_path(), element.name + ".tag")
+		
+		for element in self.sub_heritage_list.list_heritage:
+			data += "TAGFILES += " + os.path.join(target.get_final_path(), element.name + ".tag")
+			if target.config["mode"] == "release":
+				data += '=' + target.get_module(element.name).website
+			else:
 				data += '=' + os.path.join(target.get_final_path(), element.name, "html")
+			data += "\n"
 		data += '\n\n\n'
 		tools.file_write_data(filename_dox, data)
 		multiprocess.run_command("doxygen " + filename_dox)
@@ -165,12 +192,6 @@ class Module:
 	def set_website_sources(self, val):
 		self.website_source = val
 	
-	def set_path(self, val):
-		if type(val) == list:
-			tools.list_append_to(self.path, val, True)
-		else:
-			tools.list_append_to(self.path, [val], True)
-	
 	def add_path(self, list):
 		tools.list_append_to(self.path, list, True)
 	
@@ -185,6 +206,15 @@ class Module:
 	
 	def add_module_define(self, list):
 		tools.list_append_to(self.define, list, True)
+	
+	def add_exclude_symbols(self, list):
+		tools.list_append_to(self.exclude_symbole, list, True)
+	
+	def add_exclude_file(self, list):
+		tools.list_append_to(self.exclude_file, list, True)
+	
+	def add_file_patterns(self, list):
+		tools.list_append_to(self.file_patterns, list, True)
 	
 	def print_list(self, description, input_list):
 		if type(input_list) == list:

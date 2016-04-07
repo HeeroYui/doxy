@@ -38,7 +38,7 @@ PROJECT_NAME           = "Test Project"
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 1.0.0
+PROJECT_NUMBER         = 
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -768,7 +768,7 @@ WARN_LOGFILE           =
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = src
+INPUT                  = 
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -790,9 +790,6 @@ INPUT_ENCODING         = UTF-8
 
 
 FILE_PATTERNS          =
-#FILE_PATTERNS          += *.c *.cpp
-FILE_PATTERNS          += *.h *.hxx
-FILE_PATTERNS          += *.md *.markdown
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.
@@ -823,7 +820,7 @@ EXCLUDE_SYMLINKS       = NO
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = debug.h
+EXCLUDE_PATTERNS       = 
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -2379,4 +2376,4 @@ GENERATE_LEGEND        = YES
 DOT_CLEANUP            = YES
 
 ALIASES += license="@note License:\n" 
-ALIASES += not_in_doc="@brief No documentation done\n @internal\n"
+
