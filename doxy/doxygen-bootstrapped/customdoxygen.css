@@ -16,9 +16,9 @@ font-size: 1.15em !important;
 -------------------------------------------------- */
 html,
 body {
-    counter-reset: h1counter;
-    height: 100%;
-    /* The html and body elements cannot have any padding or margin. */
+	counter-reset: h1counter;
+	height: 100%;
+	/* The html and body elements cannot have any padding or margin. */
 }
 h1, .h1, h2, .h2, h3, .h3{
     font-weight: bold !important;
