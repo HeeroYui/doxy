@@ -50,6 +50,7 @@ class Module:
 		self.exclude_symbole = []
 		self.file_patterns = []
 		self.exclude_file = []
+		self.authors = []
 		
 		# The module has been already build ...
 		self.isbuild = False
@@ -181,7 +182,10 @@ class Module:
 	
 	
 	def set_version(self, val):
-		self.version = val
+		self.version = tools.get_version_from_file_or_direct(self.origin_path, val)
+	
+	def set_authors(self, val):
+		self.authors = tools.get_maintainer_from_file_or_direct(self.origin_path, val)
 	
 	def set_title(self, val):
 		self.full_name = val
@@ -201,7 +205,7 @@ class Module:
 	def add_data_path(self, list):
 		tools.list_append_to(self.data_path, list, True)
 	
-	def add_module_depend(self, list):
+	def add_depend(self, list):
 		tools.list_append_to(self.depends, list, True)
 	
 	def add_module_define(self, list):
