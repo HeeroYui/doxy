@@ -42,6 +42,7 @@ setup(name='doxy',
         'Programming Language :: Python',
         'Topic :: Software Development :: Compilers',
       ],
+      long_description_content_type="text/markdown",
       keywords='documentation over doxygen',
       scripts=['bin/doxy'],
       # Does not work on MacOs
